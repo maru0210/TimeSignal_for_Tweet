@@ -1,5 +1,5 @@
 function timesignal() {
-  const test = true;  // true:テストモード有効
+  const test = false;  // true:テストモード有効
 
   const prop = PropertiesService.getScriptProperties();
   const sheets_log = SpreadsheetApp.openById('1PWb3ih0KuZmIrJG75yM0LSWZ4vfoLL7wiaoajB88b2o');
@@ -195,7 +195,8 @@ function timesignal() {
   }
 
   const time_timesignal_diffirence = (() => {
-    if (!data_timesignal) {
+    if (!(data_timesignal == null)) {
+      Logger.log('時報が投稿されました。')
       const tweetid_timesignal = JSON.parse(data_timesignal).id_str;
 
       // 時報のtweetidをプロパティ(tweetid_timesignal_last)に記録
@@ -225,8 +226,8 @@ function timesignal() {
     // 先月のシートの処理
     const sheet_lastmonth = sheets_log.getSheets()[1];
     sheet_new.getRange('B1').setValue(sheet_lastmonth.getRange('B1').getValue());
-    sheet_lastmonth.getRange('B1').setValue(null);
-    sheet_lastmonth.getRange('E1').setValue(null);
+    sheet_lastmonth.getRange('B1').setValue('');
+    sheet_lastmonth.getRange('E1').setValue('');
 
     Logger.log('月変更処理を行いました。');
   }
@@ -245,7 +246,7 @@ function timesignal() {
   // "認証時間 (ms)"を記録
   sheet_thismonth.getRange(hour_timesignal + 33, date_timesignal + 1).setValue(time_auth);
 
-  if (!data_timesignal) {
+  if (!(data_timesignal == null)) {
     // "投稿時刻の(XX:00:00.000)との差 (ms)"を記録
     sheet_thismonth.getRange(hour_timesignal + 5, date_timesignal + 1).setValue(time_timesignal_diffirence);
   }
