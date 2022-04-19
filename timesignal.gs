@@ -10,34 +10,6 @@ function timesignal() {
   const min = 60 * 1000;
 
   function fin() {
-    if (test) {
-      Logger.log('プログラムを終了します。');
-
-      /* time_finに終了時刻を代入 */
-      const time_fin = new Date();
-      Logger.log('終了時刻: ' + time_fin);
-
-      return;
-    }
-
-    /* set_triggerのトリガーを設定 */
-    const time_set_trigger_trigger = new Date(time_timesignal.setMinutes(30));
-    try {
-      ScriptApp.newTrigger('set_trigger').timeBased().at(time_set_trigger_trigger).create();
-    }
-    catch {
-      try {
-        Logger.log('エラー: トリガーが設定できません。全てのトリガーを削除してもう一度設定します。');
-        ScriptApp.newTrigger('set_trigger').timeBased().at(time_set_trigger_trigger).create();
-      }
-      catch {
-        Logger.log('エラー: トリガーを設定できません。原因は不明です。');
-        return;
-      }
-    }
-    Logger.log('set_triggerのトリガーを設定しました。');
-    Logger.log('設定時刻: ' + time_set_trigger_trigger);
-
     Logger.log('プログラムを終了します。');
 
     /* time_finに終了時刻を代入 */
