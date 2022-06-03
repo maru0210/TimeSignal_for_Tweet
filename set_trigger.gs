@@ -1,9 +1,9 @@
 // timesignalのトリガーをセットします
 function set_trigger() {
-  const time_now = new Date();
-  const time_timesignal_trigger = new Date(time_now.getFullYear(), time_now.getMonth(), time_now.getDate(), time_now.getHours(), 58);
+  const now = new Date();
+  const trigger = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 58);
   try {
-    ScriptApp.newTrigger('timesignal').timeBased().at(time_timesignal_trigger).create();
+    ScriptApp.newTrigger('timesignal').timeBased().at(trigger).create();
   }
   catch {
     Logger.log('エラー: トリガーが設定できません。すべてのトリガーを削除して、もう一度設定します。');
@@ -13,7 +13,7 @@ function set_trigger() {
     }
     Logger.log('トリガーを削除しました。');
     try {
-      ScriptApp.newTrigger('timesignal').timeBased().at(time_timesignal_trigger);
+      ScriptApp.newTrigger('timesignal').timeBased().at(trigger);
     }
     catch (e) {
       Logger.log(e);
@@ -22,5 +22,5 @@ function set_trigger() {
     }
   }
   Logger.log('timesignalのトリガーを設定しました。');
-  Logger.log('設定時刻: ' + time_timesignal_trigger);
+  Logger.log('設定時刻: ' + trigger);
 }

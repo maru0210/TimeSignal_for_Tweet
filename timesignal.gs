@@ -1,5 +1,5 @@
 function timesignal() {
-  const test = false;  // true:テストモード有効
+  const test = true;  // true:テストモード有効
 
   const prop = PropertiesService.getScriptProperties();
   const sheets_log = SpreadsheetApp.openById('1PWb3ih0KuZmIrJG75yM0LSWZ4vfoLL7wiaoajB88b2o');
@@ -10,34 +10,6 @@ function timesignal() {
   const min = 60 * 1000;
 
   function fin() {
-    if (test) {
-      Logger.log('プログラムを終了します。');
-
-      /* time_finに終了時刻を代入 */
-      const time_fin = new Date();
-      Logger.log('終了時刻: ' + time_fin);
-
-      return;
-    }
-
-    /* set_triggerのトリガーを設定 */
-    const time_set_trigger_trigger = new Date(time_timesignal.setMinutes(30));
-    try {
-      ScriptApp.newTrigger('set_trigger').timeBased().at(time_set_trigger_trigger).create();
-    }
-    catch {
-      try {
-        Logger.log('エラー: トリガーが設定できません。全てのトリガーを削除してもう一度設定します。');
-        ScriptApp.newTrigger('set_trigger').timeBased().at(time_set_trigger_trigger).create();
-      }
-      catch {
-        Logger.log('エラー: トリガーを設定できません。原因は不明です。');
-        return;
-      }
-    }
-    Logger.log('set_triggerのトリガーを設定しました。');
-    Logger.log('設定時刻: ' + time_set_trigger_trigger);
-
     Logger.log('プログラムを終了します。');
 
     /* time_finに終了時刻を代入 */
@@ -118,8 +90,8 @@ function timesignal() {
       Logger.log('エラー: 前回の時報を削除することができませんでした。');
     }
   }
-  else {
-    Logger.log('エラーが発生しました。プロパティ(tweetid_timesignal_last)に値が入っていません。');
+  else if (!test) {
+    Logger.log('プロパティ(tweetid_timesignal_last)に値が入っていませんでした。');
     Logger.log('前回の時報を削除せずに続行します。');
   }
 
@@ -138,7 +110,6 @@ function timesignal() {
   const hour_timesignal = time_timesignal.getHours();
 
   const comment = (() => {
-    if (test) return '時報botのテストです。';
 
     const comment_part_1 = (() => {
       return hour_timesignal == 0
@@ -149,10 +120,23 @@ function timesignal() {
     const sheet_comment = sheets_comment.getSheets()[0];  // 先頭のシートを取得
     const comment_part_2 = sheet_comment.getRange(hour_timesignal + 2, day_timesignal + 2).getValue();
 
+    switch (comment_part_2.substring(2, 0)) {
+      case '/s': return 'stop';
+    }
+
+    if (test) return '時報botのテストです。';
+
     return !comment_part_2
       ? comment_part_1
       : comment_part_1 + '\n\n' + comment_part_2;
   })();
+
+  if(comment == 'stop'){
+    Logger.log('ストップコードを返されました。時報は投稿されません。');
+    fin();
+    return;
+  }
+
   Logger.log('時報のツイート文を作成しました。\n『' + comment + '』');
 
   /* n時59分59.950まで待機(2段階) */
