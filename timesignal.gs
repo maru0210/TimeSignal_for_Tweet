@@ -1,5 +1,5 @@
 function timesignal() {
-  const test = true;  // true:テストモード有効
+  const test = false;  // true:テストモード有効
 
   const prop = PropertiesService.getScriptProperties();
   const sheets_log = SpreadsheetApp.openById('1PWb3ih0KuZmIrJG75yM0LSWZ4vfoLL7wiaoajB88b2o');
